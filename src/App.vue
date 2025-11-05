@@ -53,56 +53,59 @@
         </button>
       </div>
       <div>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>Stock Amount</th>
+                <th>Executed Price</th>
+                <th>All Vat Price</th>
+                <th>CommissionFee</th>
+                <th>SecFee</th>
+                <th>TafFee</th>
+                <th>Vat7</th>
+                <th>Vat Executed</th>
+                <th>Diff Vat</th>
+                <th>Shares</th>
+                <th>Value</th>
+                <th>Completion Date</th>
+                <th>Submission Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in responseData" :key="index">
+                <td>{{ index + 1 }}</td>
+                <td>{{ item.type }}</td>
+                <td>**{{ item.symbol }}**</td>
+                <td>{{ item.stockAmount.toFixed(2) }}</td>
+                <td>{{ item.executedPrice.toFixed(3) }}</td>
+                <td>{{ item.allVatPrice.toFixed(3) }}</td>
+                <td>{{ item.vat.commissionFee?.toFixed(3) }}</td>
+                <td>{{ item.vat.secFee?.toFixed(3) }}</td>
+                <td>{{ item.vat.tafFee?.toFixed(3) }}</td>
+                <td>{{ item.vat.vat7?.toFixed(3) }}</td>
+                <td>{{ item.vatExecuted?.toFixed(3) }}</td>
+                <td>{{ item.diffVat.toFixed(3) }}</td>
+                <td>{{ item.shares?.toFixed(3) }}</td>
+                <td>{{ item.value.toFixed(2) }}</td>
+                <td>{{ formatDate(item.completionDate) }}</td>
+                <td>{{ formatDate(item.submissionDate) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <br />
+        <br />
+
         <div>Raw Data</div>
         <code>
           {{ responseData }}
         </code>
       </div>
       <br />
-      <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover">
-          <thead class="table-dark">
-            <tr>
-              <th>#</th>
-              <th>Type</th>
-              <th>Symbol</th>
-              <th>Stock Amount</th>
-              <th>Executed Price</th>
-              <th>All Vat Price</th>
-              <th>CommissionFee</th>
-              <th>SecFee</th>
-              <th>TafFee</th>
-              <th>Vat7</th>
-              <th>Vat Executed</th>
-              <th>Diff Vat</th>
-              <th>Shares</th>
-              <th>Value</th>
-              <th>Completion Date</th>
-              <th>Submission Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in responseData" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td>{{ item.type }}</td>
-              <td>**{{ item.symbol }}**</td>
-              <td>{{ item.stockAmount.toFixed(2) }}</td>
-              <td>{{ item.executedPrice.toFixed(3) }}</td>
-              <td>{{ item.allVatPrice.toFixed(3) }}</td>
-              <td>{{ item.vat.commissionFee?.toFixed(3) }}</td>
-              <td>{{ item.vat.secFee?.toFixed(3) }}</td>
-              <td>{{ item.vat.tafFee?.toFixed(3) }}</td>
-              <td>{{ item.vat.vat7?.toFixed(3) }}</td>
-              <td>{{ item.vatExecuted?.toFixed(3) }}</td>
-              <td>{{ item.diffVat.toFixed(3) }}</td>
-              <td>{{ item.shares?.toFixed(3) }}</td>
-              <td>{{ item.value.toFixed(2) }}</td>
-              <td>{{ formatDate(item.completionDate) }}</td>
-              <td>{{ formatDate(item.submissionDate) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 </template>
