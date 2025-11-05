@@ -117,7 +117,7 @@ const responseData = ref([]);
 const message = ref("");
 const isLoading = ref(false);
 const error = ref(null);
-const uploadUrl = "http://localhost:8080/upload-images"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://bf1c62e481ac.ngrok-free.app/upload-images"; // **Endpoint ที่ต้องการ**
 
 // --- Methods ---
 
