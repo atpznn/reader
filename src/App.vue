@@ -175,7 +175,7 @@ const uploadImages = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}/dime`, {
+    const response = await fetch(`${uploadUrl}dime`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
@@ -212,7 +212,7 @@ const uploadImagesBinanceth = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}/binance-th`, {
+    const response = await fetch(`${uploadUrl}binance-th`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
