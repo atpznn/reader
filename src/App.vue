@@ -52,7 +52,7 @@
           📥 Export to Excel (CSV)
         </button>
       </div>
-      <div>
+      <!-- <div>
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover">
             <thead class="table-dark">
@@ -104,7 +104,7 @@
         <code>
           {{ responseData }}
         </code>
-      </div>
+      </div> -->
       <br />
     </div>
   </div>
@@ -120,7 +120,7 @@ const responseData = ref([]);
 const message = ref("");
 const isLoading = ref(false);
 const error = ref(null);
-const uploadUrl = "https://bf1c62e481ac.ngrok-free.app/upload-images"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://reader-back.onrender.com/image-process/dime"; // **Endpoint ที่ต้องการ**
 
 // --- Methods ---
 
