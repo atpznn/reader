@@ -121,7 +121,7 @@
       </div>
       <br />
     </div> -->
-    {{ responseData }}
+    {{ JSON.stringify(responseData, null, 2) }}
   </div>
 </template>
 
