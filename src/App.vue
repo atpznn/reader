@@ -24,6 +24,20 @@
 
       <button
         class="btn btn-primary"
+        @click="uploadImagesBinanceth"
+        :disabled="files.length === 0 || files.length > maxFiles || isLoading"
+      >
+        <span
+          v-if="isLoading"
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        {{ isLoading ? "กำลังอัปโหลด..." : "ส่งรูปภาพ binanth" }}
+      </button>
+
+      <button
+        class="btn btn-primary"
         @click="uploadImages"
         :disabled="files.length === 0 || files.length > maxFiles || isLoading"
       >
@@ -33,7 +47,7 @@
           role="status"
           aria-hidden="true"
         ></span>
-        {{ isLoading ? "กำลังอัปโหลด..." : "ส่งรูปภาพ" }}
+        {{ isLoading ? "กำลังอัปโหลด..." : "ส่งรูปภาพ dime" }}
       </button>
 
       <div v-if="message" class="alert alert-success mt-3">
@@ -120,7 +134,7 @@ const responseData = ref([]);
 const message = ref("");
 const isLoading = ref(false);
 const error = ref(null);
-const uploadUrl = "https://reader-back.onrender.com/image-process/dime"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://reader-back.onrender.com/image-process/"; // **Endpoint ที่ต้องการ**
 
 // --- Methods ---
 
@@ -161,7 +175,44 @@ const uploadImages = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(uploadUrl, {
+    const response = await fetch(`${uploadUrl}/dime`, {
+      method: "POST",
+      body: formData,
+      // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // API ตอบกลับสำเร็จ (เช่น 200 OK)
+      message.value = result.message || "อัปโหลดสำเร็จ";
+      responseData.value = result.data || [];
+    } else {
+      // API ตอบกลับสถานะผิดพลาด (เช่น 4xx, 5xx)
+      throw new Error(result.message || "การอัปโหลดล้มเหลวจากเซิร์ฟเวอร์");
+    }
+  } catch (err) {
+    console.error("Upload Error:", err);
+    error.value = err.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ";
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const uploadImagesBinanceth = async () => {
+  isLoading.value = true;
+  error.value = null;
+  message.value = "";
+  responseData.value = [];
+
+  try {
+    const formData = new FormData();
+    // เพิ่มไฟล์ทั้งหมดภายใต้ชื่อฟอร์ม 'images'
+    files.value.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    const response = await fetch(`${uploadUrl}/binance-th`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
