@@ -59,14 +59,14 @@
     </div>
     <hr class="my-5" />
 
-    <div v-if="responseData.length > 0">
+    <!-- <div v-if="responseData.length > 0">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>📊 ผลลัพธ์ข้อมูล</h3>
         <button class="btn btn-success" @click="exportToExcel">
           📥 Export to Excel (CSV)
         </button>
       </div>
-      <!-- <div>
+      <div>
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover">
             <thead class="table-dark">
@@ -118,9 +118,10 @@
         <code>
           {{ responseData }}
         </code>
-      </div> -->
+      </div>
       <br />
-    </div>
+    </div> -->
+    {{ responseData }}
   </div>
 </template>
 
