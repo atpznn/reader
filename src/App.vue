@@ -187,7 +187,7 @@ const uploadImages = async () => {
     if (response.ok) {
       // API ตอบกลับสำเร็จ (เช่น 200 OK)
       message.value = result.message || "อัปโหลดสำเร็จ";
-      responseData.value = result.data || [];
+      responseData.value = result || [];
     } else {
       // API ตอบกลับสถานะผิดพลาด (เช่น 4xx, 5xx)
       throw new Error(result.message || "การอัปโหลดล้มเหลวจากเซิร์ฟเวอร์");
@@ -224,7 +224,7 @@ const uploadImagesBinanceth = async () => {
     if (response.ok) {
       // API ตอบกลับสำเร็จ (เช่น 200 OK)
       message.value = result.message || "อัปโหลดสำเร็จ";
-      responseData.value = result.data || [];
+      responseData.value = result || [];
     } else {
       // API ตอบกลับสถานะผิดพลาด (เช่น 4xx, 5xx)
       throw new Error(result.message || "การอัปโหลดล้มเหลวจากเซิร์ฟเวอร์");
