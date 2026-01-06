@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container my-5">
     <h2 class="mb-4">🖼️ อัปโหลดรูปภาพ (สูงสุด 5 ไฟล์)</h2>
 
     <div class="card p-4 shadow-sm">
@@ -58,91 +58,54 @@
       </div>
     </div>
     <hr class="my-5" />
-
-    <!-- <div v-if="responseData.length > 0">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>📊 ผลลัพธ์ข้อมูล</h3>
-        <button class="btn btn-success" @click="exportToExcel">
-          📥 Export to Excel (CSV)
-        </button>
-      </div>
-      <div>
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th>Symbol</th>
-                <th>Stock Amount</th>
-                <th>Executed Price</th>
-                <th>All Vat Price</th>
-                <th>CommissionFee</th>
-                <th>SecFee</th>
-                <th>TafFee</th>
-                <th>Vat7</th>
-                <th>Vat Executed</th>
-                <th>Diff Vat</th>
-                <th>Shares</th>
-                <th>Value</th>
-                <th>Completion Date</th>
-                <th>Submission Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) in responseData" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>{{ item.type }}</td>
-                <td>**{{ item.symbol }}**</td>
-                <td>{{ item.stockAmount.toFixed(2) }}</td>
-                <td>{{ item.executedPrice.toFixed(3) }}</td>
-                <td>{{ item.allVatPrice.toFixed(3) }}</td>
-                <td>{{ item.vat.commissionFee?.toFixed(3) }}</td>
-                <td>{{ item.vat.secFee?.toFixed(3) }}</td>
-                <td>{{ item.vat.tafFee?.toFixed(3) }}</td>
-                <td>{{ item.vat.vat7?.toFixed(3) }}</td>
-                <td>{{ item.vatExecuted?.toFixed(3) }}</td>
-                <td>{{ item.diffVat.toFixed(3) }}</td>
-                <td>{{ item.shares?.toFixed(3) }}</td>
-                <td>{{ item.value.toFixed(2) }}</td>
-                <td>{{ formatDate(item.completionDate) }}</td>
-                <td>{{ formatDate(item.submissionDate) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <br />
-        <br />
-
-        <div>Raw Data</div>
-        <code>
-          {{ responseData }}
-        </code>
-      </div>
+    <button
+      v-if="result.status != 'waiting' && result.status != 'success'"
+      @click="checkTask"
+    >
+      check
+    </button>
+    <div v-if="result.status == 'success' || result.status == 'process'">
+      <div v-if="result.status == 'success'">เสร็จสิ้น</div>
+      <div v-else="result.status == 'process'">กำลังประมวลผล</div>
       <br />
-    </div> -->
-    {{ JSON.stringify(responseData, null, 2) }}
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div v-for="(value, key, index) in result.data" :key="key">
+          <Table :items="result.data[key]" />
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div>
+        เลขคิว : {{ responseData.taskId }} สถานะ:
+        {{ responseData.status }} กำลังรอ: {{ responseData.waiting }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
+import Table from "./Table.vue";
 // --- State Variables ---
 const maxFiles = 5;
 const files = ref([]);
-const responseData = ref([]);
+const responseData = ref({ taskId: "", status: "", waiting: "" });
 const message = ref("");
 const isLoading = ref(false);
 const error = ref(null);
-const uploadUrl = "https://reader-back.onrender.com/image-process/"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://reader-back.zeabur.app/"; // **Endpoint ที่ต้องการ**
+const result = ref({ data: [], status: "", waiting: "" });
+function checkTask() {
+  fetch(`${uploadUrl}task/${responseData.value.taskId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      result.value = data;
+    })
+    .catch((err) => {
+      console.error("Error fetching task status:", err);
+    });
+}
 
-// --- Methods ---
-
-/**
- * จัดการกับการเลือกไฟล์และจำกัดจำนวน
- * @param {Event} event - event จาก input file
- */
 const handleFileChange = (event) => {
   // รีเซ็ตสถานะ
   message.value = "";
@@ -176,7 +139,7 @@ const uploadImages = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}dime`, {
+    const response = await fetch(`${uploadUrl}dime/image-process`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
@@ -213,7 +176,7 @@ const uploadImagesBinanceth = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}binance-th`, {
+    const response = await fetch(`${uploadUrl}binance-th/image-process`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
