@@ -58,12 +58,7 @@
       </div>
     </div>
     <hr class="my-5" />
-    <button
-      v-if="result.status != 'waiting' && result.status != 'success'"
-      @click="checkTask"
-    >
-      check
-    </button>
+    <button @click="checkTask">check data</button>
     <div v-if="result.status == 'success' || result.status == 'process'">
       <div v-if="result.status == 'success'">เสร็จสิ้น</div>
       <div v-else="result.status == 'process'">กำลังประมวลผล</div>
