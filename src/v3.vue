@@ -27,7 +27,6 @@
         ></span>
         {{ isLoading ? "กำลังอัปโหลด..." : "ส่งรูปภาพ binanth" }}
       </button>
-
       <button
         class="btn btn-primary"
         @click="uploadImages"
@@ -77,7 +76,7 @@ const isLoading = ref(isReady.value);
 watch(
   () => isReady.value,
   () => {
-    isLoading.value = isReady.value;
+    isLoading.value = !isReady.value;
   }
 );
 const error = ref(null);
@@ -156,7 +155,8 @@ const handleFileChange = async (event) => {
     img.src = imageUrl;
     await new Promise((resolve) => {
       img.onload = async () => {
-        texts.value.push(`${await recognize(imageUrl)}`);
+        const text = await recognize(imageUrl);
+        texts.value.push(`${text}`);
         resolve(1);
       };
     });

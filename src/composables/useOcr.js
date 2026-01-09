@@ -3,17 +3,20 @@ import { createWorker } from "tesseract.js";
 
 export function useOcr() {
   const worker = ref(null);
-  const isReady = ref(true);
+  const isReady = ref(false);
   const isProcessing = ref(false);
 
   const initWorker = async () => {
-    isReady.value = true;
-    worker.value = await createWorker("tha+eng", 1);
     isReady.value = false;
+    worker.value = await createWorker(["eng", "tha"], 1);
+    console.log(worker.value);
+    isReady.value = true;
   };
 
   // ฟังก์ชันสำหรับทำ OCR (รับภาพที่ย่อขนาดแล้วมาใช้)
   const recognize = async (imageSource) => {
+    console.log(worker.value);
+    console.log(isReady.value);
     if (!worker.value || !isReady.value) return;
 
     isProcessing.value = true;
