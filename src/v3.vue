@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import Table from "./Table.vue";
 import { useOcr } from "./composables/useOcr";
 // --- State Variables ---
@@ -74,6 +74,12 @@ const responseData = ref<any>();
 const message = ref("");
 const { recognize, isReady, isProcessing } = useOcr();
 const isLoading = ref(isReady.value);
+watch(
+  () => isReady.value,
+  () => {
+    isLoading.value = isReady.value;
+  }
+);
 const error = ref(null);
 const uploadUrl = "https://reader-back.zeabur.app/v1/"; // **Endpoint ที่ต้องการ**
 

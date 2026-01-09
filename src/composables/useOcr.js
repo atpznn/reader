@@ -1,14 +1,15 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { createWorker } from "tesseract.js";
 
 export function useOcr() {
   const worker = ref(null);
-  const isReady = ref(false);
+  const isReady = ref(true);
   const isProcessing = ref(false);
 
   const initWorker = async () => {
-    worker.value = await createWorker("tha+eng", 1);
     isReady.value = true;
+    worker.value = await createWorker("tha+eng", 1);
+    isReady.value = false;
   };
 
   // ฟังก์ชันสำหรับทำ OCR (รับภาพที่ย่อขนาดแล้วมาใช้)
@@ -42,7 +43,7 @@ export function useOcr() {
 
   return {
     recognize,
-    isReady,
+    isReady: computed(() => isReady.value),
     isProcessing,
   };
 }
