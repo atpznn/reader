@@ -14,7 +14,9 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
-    "vue": "^3.5.22"
+    "tesseract.js": "^7.0.0",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
