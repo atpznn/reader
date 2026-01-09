@@ -63,21 +63,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import Table from "./Table.vue";
-import { useOCR } from "./composables/useOcr";
+import { useOcr } from "./composables/useOcr";
 // --- State Variables ---
 const maxFiles = 5;
 const files = ref([]);
 
 const responseData = ref<any>();
 const message = ref("");
-const isLoading = ref(false);
+const { recognize, isReady, isProcessing } = useOcr();
+const isLoading = ref(isReady.value);
 const error = ref(null);
 const uploadUrl = "https://reader-back.zeabur.app/v1/"; // **Endpoint ที่ต้องการ**
 
 const texts = ref([]);
-const ocr = useOCR();
+/**
+ * ฟังก์ชันย่อขนาดภาพด้วย Canvas
+ * @param {HTMLImageElement | HTMLVideoElement | File} source - แหล่งที่มาของภาพ
+ * @param {number} ratio - สัดส่วนที่ต้องการลด (เช่น 0.55 สำหรับ 55%)
+ * @returns {Promise<string>} - ส่งกลับเป็น Base64 หรือจะเปลี่ยนเป็น Blob ก็ได้
+ */
+async function resizeImage(source, ratio = 0.55) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    // รองรับกรณี input เป็น File/Blob
+    if (source instanceof File || source instanceof Blob) {
+      img.src = URL.createObjectURL(source);
+    } else {
+      img.src = source.src || source;
+    }
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // คำนวณขนาดใหม่
+      const newWidth = img.width * ratio;
+      const newHeight = img.height * ratio;
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      // วาดภาพลงบน Canvas ตามขนาดใหม่
+      // ใช้ ImageSmoothingEnabled เพื่อช่วยให้ตัวอักษรไม่แตกจนอ่านไม่ออก
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+      // ส่งค่ากลับเป็น Data URL (Base64) เพื่อส่งต่อให้ Tesseract
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.8); // 0.8 คือ quality 80%
+
+      // Clean up memory
+      if (source instanceof File || source instanceof Blob) {
+        URL.revokeObjectURL(img.src);
+      }
+
+      resolve(dataUrl);
+    };
+
+    img.onerror = reject;
+  });
+}
 
 const handleFileChange = async (event) => {
   // รีเซ็ตสถานะ
@@ -102,7 +150,7 @@ const handleFileChange = async (event) => {
     img.src = imageUrl;
     await new Promise((resolve) => {
       img.onload = async () => {
-        texts.value.push(`${await ocr.recognize(imageUrl)}`);
+        texts.value.push(`${await recognize(imageUrl)}`);
         resolve(1);
       };
     });
