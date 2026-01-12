@@ -88,7 +88,7 @@ const responseData = ref({ taskId: "", status: "", waiting: "" });
 const message = ref("");
 const isLoading = ref(false);
 const error = ref(null);
-const uploadUrl = "https://reader-back.zeabur.app/"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://itg.zeabur.app/"; // **Endpoint ที่ต้องการ**
 const result = ref({ data: [], status: "", waiting: "" });
 function checkTask() {
   fetch(`${uploadUrl}task/${responseData.value.taskId}`)
@@ -134,7 +134,7 @@ const uploadImages = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}dime/image-process`, {
+    const response = await fetch(`${uploadUrl}v2/dime/image-process`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData
@@ -171,7 +171,7 @@ const uploadImagesBinanceth = async () => {
       formData.append("images", file);
     });
 
-    const response = await fetch(`${uploadUrl}binance-th/image-process`, {
+    const response = await fetch(`${uploadUrl}v2/binance-th/image-process`, {
       method: "POST",
       body: formData,
       // ไม่ต้องใส่ 'Content-Type': 'multipart/form-data' เพราะ fetch จะใส่ให้เองเมื่อใช้ FormData

@@ -80,7 +80,7 @@ watch(
   }
 );
 const error = ref(null);
-const uploadUrl = "https://reader-back.zeabur.app/v1/"; // **Endpoint ที่ต้องการ**
+const uploadUrl = "https://itg.zeabur.app/v1/"; // **Endpoint ที่ต้องการ**
 
 const texts = ref([]);
 /**
